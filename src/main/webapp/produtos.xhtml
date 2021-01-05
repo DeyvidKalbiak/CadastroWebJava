@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Produtos</title>
+</h:head>
+
+<h:body>
+
+	<p:growl id="msg" showDetail="true" sticky="false" life="2500" />
+
+	<h1>Cadastro de Produtos</h1>
+	<br />
+
+
+	<h:form id="formTabela">
+		<p:dataTable filteredValue="#{MBProduto.produtosFiltrados}"
+			paginatorPosition="bottom" paginator="true" rows="3"
+			emptyMessage="Nenhum Produto Cadastrado"
+			value="#{MBProduto.produtos}" var="prod">
+
+			<f:facet name="header">
+				<p:commandButton value="Novo"
+					onclick="PF('dialogNovoProduto').show();" />
+			</f:facet>
+			<p:column headerText="Cód Barras">
+				<h:outputText value="#{prod.codBarras}" />
+			</p:column>
+
+			<p:column filterBy="#{prod.desricao}" headerText="Descrição">
+				<h:outputText value="#{prod.desricao}" />
+			</p:column>
+
+			<p:column sortBy="#{prod.valor}" headerText="Valor">
+				<h:outputText value="#{prod.valor}">
+					<f:convertNumber minFractionDigits="2" locale="pt-BR" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Opções" style="text-align: center">
+				<p:commandButton icon="ui-icon-trash"
+					actionListener="#{MBProduto.capturaProduto}"
+					oncomplete="PF('dlgExcluir').show();" update="formExcluir">
+					<f:attribute name="prodSelecionado" value="#{prod}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-pencil"
+					actionListener="#{MBProduto.capturaProduto}"
+					oncomplete="PF('dlgEditar').show();" update="formEditar">
+					<f:attribute name="prodSelecionado" value="#{prod}" />
+				</p:commandButton>
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+
+	<p:dialog widgetVar="dialogNovoProduto" modal="true"
+		header="Novo Produto">
+
+		<h:form>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Código de Barras" />
+
+				<p:inputText value="#{MBProduto.produto.codBarras}" />
+
+				<p:outputLabel value="Descrição" />
+				<p:inputText value="#{MBProduto.produto.desricao}" />
+
+				<p:outputLabel value="Valor" />
+				<p:inputText value="#{MBProduto.produto.valor}">
+					<f:convertNumber locale="pt-BR" minFractionDigits="2"
+						maxFractionDigits="2" />
+				</p:inputText>
+
+			</h:panelGrid>
+
+			<p:commandButton value="Salvar"
+				actionListener="#{MBProduto.salvar()}"
+				update="@form :formTabela :msg"
+				oncomplete="PF('dialogNovoProduto').hide();" />
+		</h:form>
+
+	</p:dialog>
+
+	<p:dialog header="Exclusão" modal="true" widgetVar="dlgExcluir">
+		<h:form id="formExcluir">
+			<p:outputLabel
+				value="Deseja realmente excluir o produto #{MBProduto.produto.desricao} ?" />
+			<h:panelGrid columns="2">
+				<p:commandButton value="Sim" actionListener="#{MBProduto.deletar}"
+					update="formTabela :msg" oncomplete="PF('dlgExcluir').hide();" />
+				<p:commandButton value="Não" onclick="PF('dlgExcluir').hide();" />
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Edição" modal="true" widgetVar="dlgEditar"
+		resizable="false" draggable="false">
+		<h:form id="formEditar">
+			<p:outputLabel value="#{MBProduto.produto.id}" />
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Cod Barras" />
+				<p:inputText value="#{MBProduto.produto.desricao}" />
+				<p:outputLabel value="Valor" />
+				<p:inputText value="#{MBProduto.produto.valor}">
+					<f:convertNumber locale="pt-BR" minFractionDigits="2"
+						maxFractionDigits="2" />
+				</p:inputText>
+			</h:panelGrid>
+			<p:commandButton value="Editar" actionListener="#{MBProduto.editar}"
+				update="formTabela :msg" oncomplete="PF('dlgEditar').hide();" />
+
+		</h:form>
+	</p:dialog>
+</h:body>
+
+</html>

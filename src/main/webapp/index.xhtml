@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h:title>Cadastro de produto</h:title>
+
+</h:head>
+<h:body>
+	<h1>CAdastro de produtos</h1>
+	<br />
+
+	<h:form>
+		<h:outputLabel value="Código de Barras" />
+		<br />
+		<h:inputText value="#{MBProduto.produto.codBarras}" />
+		<br />
+
+		<h:outputLabel value="Descrição " />
+		<br />
+		<h:inputText value="#{MBProduto.produto.desricao}" />
+		<br />
+
+		<h:outputLabel value="Valor " />
+		<br />
+		<h:inputText value="#{MBProduto.produto.valor}">
+			<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+				locale="pt-BR" />
+
+		</h:inputText>
+		<br />
+
+		<h:commandButton actionListener="#{MBProduto.salvar}" value="Salvar">
+			<f:ajax execute="@form" render="@form :formTabela" />
+		</h:commandButton>
+
+	</h:form>
+
+	<h:form id="formTabela">
+		<h:dataTable border="1" value="#{MBProduto.produtos}" var="prod">
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Cod Barras" />
+				</f:facet>
+				<h:outputText value="#{prod.codBarras}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Descrição" />
+
+				</f:facet>
+				<h:outputText value="#{prod.desricao}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Valor" />
+
+				</f:facet>
+				<h:outputText value="#{prod.valor}">
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+						locale="pt-BR" />
+				</h:outputText>
+			</h:column>
+
+		</h:dataTable>
+	</h:form>
+
+</h:body>
+
+</html>
